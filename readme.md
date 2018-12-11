@@ -52,7 +52,15 @@ This process involves setting the first qubit to a value of 1 (the value we want
 
 ### The Deutsch Jozsa Algorithm
 
+An example of the Deutsch Jozsa Algorithm. This algorithm demonstrates how a quantum computer substantially differs from a classical computer by solving a problem in 1 CPU cycle, that would take a classical computer much longer.
+
 ### Fly Unicorn
+
+A game written on a quantum computer!
+
+Your magestic unicorn is ready for flight!
+After a long night of preparation and celebration, it's time to visit the castle in the clouds.
+Use your keyboard to fly up or down on a quantum computer, as you ascend your way into the castle.
 
 License
 ----
