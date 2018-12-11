@@ -11,30 +11,36 @@ from configparser import RawConfigParser
 
 type = 'sim' # Run program on the simulator or real quantum machine.
 
-def run(program, type):
+def run(program, type, shots = 100):
   if type == 'real':
-    # Setup the API key for the real quantum computer.
-    parser = RawConfigParser()
-    parser.read('config.ini')
-    IBMQ.enable_account(parser.get('IBM', 'key'))
+    if not run.isInit:
+        # Setup the API key for the real quantum computer.
+        parser = RawConfigParser()
+        parser.read('config.ini')
+        IBMQ.enable_account(parser.get('IBM', 'key'))
+        run.isInit = True
+
     # Set the backend server.
     backend = qiskit.backends.ibmq.least_busy(qiskit.IBMQ.backends(simulator=False))
+
     # Execute the program on the quantum machine.
     print("Running on", backend.name())
     job = qiskit.execute(program, backend)
     return job.result().get_counts()
   else:
     # Execute the program in the simulator.
-    job = qiskit.execute(program, qiskit.Aer.get_backend('qasm_simulator'))
     print("Running on the simulator.")
+    job = qiskit.execute(program, qiskit.Aer.get_backend('qasm_simulator'), shots=shots)
     return job.result().get_counts()
+
+run.isInit = False
 
 # Set the length of the input array to check.
 n = 3
 
 # Choose a random type and value for the oracle function.
-oracleType = 1#np.random.randint(2)
-oracleValue = 1#np.random.randint(2)
+oracleType = np.random.randint(2)
+oracleValue = np.random.randint(2)
 
 print("The oracle is constant.") if oracleType == 0 else print("The oracle is balanced.")
 

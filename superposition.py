@@ -3,16 +3,20 @@ from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit
 from qiskit import IBMQ
 from configparser import RawConfigParser
 
-type = 'sim' # Run program on the simulator or real quantum machine.
+type = 'real' # Run program on the simulator or real quantum machine.
 
-def run(program, type):
+def run(program, type, shots = 100):
   if type == 'real':
-    # Setup the API key for the real quantum computer.
-    parser = RawConfigParser()
-    parser.read('config.ini')
-    IBMQ.enable_account(parser.get('IBM', 'key'))
+    if not run.isInit:
+        # Setup the API key for the real quantum computer.
+        parser = RawConfigParser()
+        parser.read('config.ini')
+        IBMQ.enable_account(parser.get('IBM', 'key'))
+        run.isInit = True
+
     # Set the backend server.
     backend = qiskit.backends.ibmq.least_busy(qiskit.IBMQ.backends(simulator=False))
+
     # Execute the program on the quantum machine.
     print("Running on", backend.name())
     job = qiskit.execute(program, backend)
@@ -20,8 +24,10 @@ def run(program, type):
   else:
     # Execute the program in the simulator.
     print("Running on the simulator.")
-    job = qiskit.execute(program, qiskit.Aer.get_backend('qasm_simulator'))
+    job = qiskit.execute(program, qiskit.Aer.get_backend('qasm_simulator'), shots=shots)
     return job.result().get_counts()
+
+run.isInit = False
 
 #
 # Example 1: Measure 2 qubits in their initial state, all zeros.

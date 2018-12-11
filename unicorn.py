@@ -12,14 +12,18 @@ from configparser import RawConfigParser
 # Selects the environment to run the game on: simulator or real
 device = 'real';
 
-def run(program, type, shots):
+def run(program, type, shots = 100):
   if type == 'real':
-    # Setup the API key for the real quantum computer.
-    parser = RawConfigParser()
-    parser.read('config.ini')
-    IBMQ.enable_account(parser.get('IBM', 'key'))
+    if not run.isInit:
+        # Setup the API key for the real quantum computer.
+        parser = RawConfigParser()
+        parser.read('config.ini')
+        IBMQ.enable_account(parser.get('IBM', 'key'))
+        run.isInit = True
+
     # Set the backend server.
     backend = qiskit.backends.ibmq.least_busy(qiskit.IBMQ.backends(simulator=False))
+
     # Execute the program on the quantum machine.
     print("Running on", backend.name())
     job = qiskit.execute(program, backend)
@@ -68,6 +72,7 @@ def action(command):
 
   return switcher.get(command, -1)
 
+run.isInit = False # Indicate that we need to initialize the IBM Q API in the run() method.
 isGameOver = False # Indicates when the game is complete.
 altitude = 0 # Current altitude of player. Once goal is reached, the game ends.
 goal = 1000 # Max altitude for the player to reach to end the game.
