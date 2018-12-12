@@ -5,7 +5,7 @@ A set of simple programs for learning how to program a quantum computer.
 
 ## What is it?
 
-Quantum computing is a fundamentally new form of computing technology based upon quantum physics and its inherent properties of superposition and entanglement. It brings a new paradigm to programming, where algorithms can be created that can process exponentially more data than classical computers that rely on transistor-based technology.
+Quantum computing is a technology based upon quantum physics and its inherent properties of superposition and entanglement. It brings a new paradigm to programming, where algorithms can be created that can process exponentially more data than classical computers that rely on transistor-based technology.
 
 This project contains a set of basic example programs to learn about programming a quantum computer.
 
@@ -36,7 +36,7 @@ A simple "Hello World" program in quantum computing. The program uses 1 qubit an
 
 ### Superposition
 
-An example of using superposition in quantum programming. This program contains 3 examples to demonstrate the properties of quantum superposition and entanglement.
+An example of using superposition in quantum programming. This program contains three examples to demonstrate the properties of quantum superposition and entanglement.
 
 The first example measures 2 qubits in their initial states (all zeros) and prints the results.
 
@@ -52,7 +52,7 @@ This process involves setting the first qubit to a value of 1 (the value we want
 
 ### The Deutsch Jozsa Algorithm
 
-An example of the Deutsch Jozsa Algorithm. This algorithm demonstrates how a quantum computer substantially differs from a classical computer by solving a problem in 1 CPU cycle, that would take a classical computer much longer.
+An example of the Deutsch Jozsa Algorithm. This algorithm demonstrates how a quantum computer substantially differs from a classical computer by solving a problem in 1 cycle, that would take a classical computer much longer.
 
 ### Fly Unicorn
 
