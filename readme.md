@@ -32,9 +32,23 @@ To get started with quantum programming and the examples in this project, follow
 
 ### Hello World
 
+[hello.py](hello.py)
+
 A simple "Hello World" program in quantum computing. The program uses 1 qubit and simply measures it, finally printing out the text, "Hello World" and the measurement appended.
 
+### Fly Unicorn
+
+[unicorn.py](unicorn.py)
+
+A game written on a quantum computer!
+
+Your magestic unicorn is ready for flight!
+After a long night of preparation and celebration, it's time to visit the castle in the clouds.
+Use your keyboard to fly up or down on a quantum computer, as you ascend your way into the castle.
+
 ### Superposition
+
+[superposition.py](superposition.py)
 
 An example of using superposition in quantum programming. This program contains three examples to demonstrate the properties of quantum superposition and entanglement.
 
@@ -46,21 +60,17 @@ The third example demonstrates [superdense coding](https://en.wikipedia.org/wiki
 
 ### Cloning a Qubit
 
+[clone.py](clone.py)
+
 An example of cloning a qubit that is currently in superposition to another qubit.
 
 This process involves setting the first qubit to a value of 1 (the value we want to clone to the second qubit). We then place the first qubit into superposition. To clone, we first reverse the superposition on the first qubit. Next, we perform a controlled-not operation between the two qubits, establishing an entanglement. We then put both qubits into superposition, effectively cloning their values.
 
 ### The Deutsch Jozsa Algorithm
 
+[deutsch_jozsa.py](deutsch_jozsa.py)
+
 An example of the Deutsch Jozsa Algorithm. This algorithm demonstrates how a quantum computer substantially differs from a classical computer by solving a problem in 1 cycle, that would take a classical computer much longer.
-
-### Fly Unicorn
-
-A game written on a quantum computer!
-
-Your magestic unicorn is ready for flight!
-After a long night of preparation and celebration, it's time to visit the castle in the clouds.
-Use your keyboard to fly up or down on a quantum computer, as you ascend your way into the castle.
 
 License
 ----
