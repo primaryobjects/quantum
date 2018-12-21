@@ -18,9 +18,9 @@ from qiskit import IBMQ
 import numpy as np
 from configparser import RawConfigParser
 
-type = 'real' # Run program on the simulator or real quantum machine.
+type = 'sim' # Run program on the simulator or real quantum machine.
 
-def run(program, type, shots = 1):
+def run(program, type, shots = 100):
   if type == 'real':
     if not run.isInit:
         # Setup the API key for the real quantum computer.
@@ -44,11 +44,22 @@ def run(program, type, shots = 1):
 
 run.isInit = False
 
+def oracle(program, bit0, bit1, bit2, bit3):
+  # Invert the bits associated with a value of 0.
+  if bit0 == 0:
+    program.x(qr[0])
+  if bit1 == 0:
+    program.x(qr[1])
+  if bit2 == 0:
+    program.x(qr[2])
+  if bit3 == 0:
+    program.x(qr[3])
+
 # Choose a random code for the oracle function.
-bit0 = 0 #np.random.randint(2)
-bit1 = 1 #np.random.randint(2)
-bit2 = 0 #np.random.randint(2)
-bit3 = 0 #np.random.randint(2)
+bit0 = np.random.randint(2)
+bit1 = np.random.randint(2)
+bit2 = np.random.randint(2)
+bit3 = np.random.randint(2)
 password = str(bit3) + str(bit2) + str(bit1) + str(bit0)
 
 print("The oracle password is " + password + ".")
@@ -62,10 +73,8 @@ program = QuantumCircuit(qr, cr)
 # Place the qubits into superposition to represent all possible values.
 program.h(qr)
 
-# Oracle for 0010. Invert the 0-value bits.
-program.x(qr[0])
-program.x(qr[2])
-program.x(qr[3])
+# Run oracle on key. Invert the 0-value bits.
+oracle(program, bit0, bit1, bit2, bit3)
 
 program.cu1(np.pi / 4, qr[0], qr[3])
 program.cx(qr[0], qr[1])
@@ -82,9 +91,7 @@ program.cx(qr[0], qr[2])
 program.cu1(np.pi/4, qr[2], qr[3])
 
 # Reverse the inversions by the oracle.
-program.x(qr[0])
-program.x(qr[2])
-program.x(qr[3])
+oracle(program, bit0, bit1, bit2, bit3)
 
 # Amplification.
 program.h(qr)
@@ -111,11 +118,6 @@ program.h(qr)
 
 # Measure the result.
 program.barrier(qr)
-#program.measure(qr[0], cr[0])
-#program.measure(qr[1], cr[1])
-#program.measure(qr[2], cr[2])
-#program.measure(qr[3], cr[3])
-
 program.measure(qr, cr)
 
 print(run(program, type))
