@@ -16,6 +16,7 @@ import qiskit
 from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit
 from qiskit import IBMQ
 import numpy as np
+import operator
 from configparser import RawConfigParser
 
 type = 'sim' # Run program on the simulator or real quantum machine.
@@ -44,25 +45,26 @@ def run(program, type, shots = 100):
 
 run.isInit = False
 
-def oracle(program, bit0, bit1, bit2, bit3):
+def oracle(program, password):
+  # Find all bits with a value of 0.
+  indices = np.where(password == 0)[0]
+
   # Invert the bits associated with a value of 0.
-  if bit0 == 0:
-    program.x(qr[0])
-  if bit1 == 0:
-    program.x(qr[1])
-  if bit2 == 0:
-    program.x(qr[2])
-  if bit3 == 0:
-    program.x(qr[3])
+  for i in range(len(indices)):
+    # We want to read bits, starting with the right-most value as index 0.
+    index = int(len(password) - 1 - indices[i])
+    # Invert the qubit.
+    program.x(qr[index])
 
 # Choose a random code for the oracle function.
-bit0 = np.random.randint(2)
-bit1 = np.random.randint(2)
-bit2 = np.random.randint(2)
-bit3 = np.random.randint(2)
-password = str(bit3) + str(bit2) + str(bit1) + str(bit0)
+password = np.random.randint(2, size=4)
 
-print("The oracle password is " + password + ".")
+# Convert the password array into an array of strings.
+passwordStrArr = np.char.mod('%d', password)
+# Convert the array of strings into a single string for display.
+passwordStr = ''.join(passwordStrArr)
+# Display the password.
+print("The oracle password is " + passwordStr + ".")
 
 # Create 2 qubits for the input array.
 qr = QuantumRegister(4)
@@ -74,8 +76,9 @@ program = QuantumCircuit(qr, cr)
 program.h(qr)
 
 # Run oracle on key. Invert the 0-value bits.
-oracle(program, bit0, bit1, bit2, bit3)
+oracle(program, password)
 
+# Apply Grover's algorithm with a triple controlled Pauli Z-gate (cccZ).
 program.cu1(np.pi / 4, qr[0], qr[3])
 program.cx(qr[0], qr[1])
 program.cu1(-np.pi / 4, qr[1], qr[3])
@@ -91,13 +94,13 @@ program.cx(qr[0], qr[2])
 program.cu1(np.pi/4, qr[2], qr[3])
 
 # Reverse the inversions by the oracle.
-oracle(program, bit0, bit1, bit2, bit3)
+oracle(program, password)
 
 # Amplification.
 program.h(qr)
 program.x(qr)
 
-# cccZ
+# Apply Grover's algorithm with a triple controlled Pauli Z-gate (cccZ).
 program.cu1(np.pi/4, qr[0], qr[3])
 program.cx(qr[0], qr[1])
 program.cu1(-np.pi/4, qr[1], qr[3])
