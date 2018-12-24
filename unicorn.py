@@ -10,7 +10,7 @@ from qiskit import IBMQ
 from configparser import RawConfigParser
 
 # Selects the environment to run the game on: simulator or real
-device = 'real';
+device = 'sim';
 
 def run(program, type, shots = 100):
   if type == 'real':
@@ -82,8 +82,8 @@ print('===============')
 print('  Fly Unicorn')
 print('===============')
 print('')
-print('Your magestic unicorn is ready for flight!')
-print('After a long night of preparation and celebration, it''s time to visit the castle in the clouds.')
+print('Your majestic unicorn is ready for flight!')
+print('After a long night of preparation and celebration, it\'s time to visit the castle in the clouds.')
 print('Use your keyboard to fly up or down on a quantum computer, as you ascend your way into the castle.')
 print('')
 
