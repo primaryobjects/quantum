@@ -46,6 +46,38 @@ Your magestic unicorn is ready for flight!
 After a long night of preparation and celebration, it's time to visit the castle in the clouds.
 Use your keyboard to fly up or down on a quantum computer, as you ascend your way into the castle.
 
+```text
+===============
+  Fly Unicorn
+===============
+
+Your majestic unicorn is ready for flight!
+After a long night of preparation and celebration, it’s time to visit the castle in the clouds.
+Use your keyboard to fly up or down on a quantum computer, as you ascend your way into the castle.
+
+
+=====================
+-[ Altitude 0 feet ]-
+Your unicorn is waiting for you on the ground.
+[up,down,quit]: u
+You soar into the sky.
+Running on the simulator.
+{'0': 945, '1': 55}
+
+=====================
+-[ Altitude 55 feet ]-
+Your unicorn is floating gently above the ground.
+[up,down,quit]: u
+You soar into the sky.
+Running on the simulator.
+{'0': 886, '1': 114}
+
+=====================
+-[ Altitude 114 feet ]-
+Your unicorn is hovering just above the evergreen sea of trees.
+[up,down,quit]:
+```
+
 ### Superposition
 
 [superposition.py](superposition.py)
