@@ -1,6 +1,6 @@
 import qiskit
 from qiskit import IBMQ, ClassicalRegister, QuantumRegister, QuantumCircuit, execute, Aer
-from qiskit.backends.ibmq import least_busy
+from qiskit.providers.ibmq import least_busy
 from configparser import RawConfigParser
 
 # Setup the API key for the real quantum computer.

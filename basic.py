@@ -22,7 +22,7 @@ print("Running on the simulator.")
 print(job.result().get_counts())
 
 # Execute the program on a real quantum computer.
-backend = qiskit.backends.ibmq.least_busy(qiskit.IBMQ.backends(simulator=False))
+backend = qiskit.providers.ibmq.least_busy(qiskit.IBMQ.backends(simulator=False))
 print("Running on", backend.name())
 job = qiskit.execute(program, backend)
 print(job.result().get_counts())

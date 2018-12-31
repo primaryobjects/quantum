@@ -20,7 +20,7 @@ def run(program, type, shots = 100):
         run.isInit = True
 
     # Set the backend server.
-    backend = qiskit.backends.ibmq.least_busy(qiskit.IBMQ.backends(simulator=False))
+    backend = qiskit.providers.ibmq.least_busy(qiskit.IBMQ.backends(simulator=False))
 
     # Execute the program on the quantum machine.
     print("Running on", backend.name())
