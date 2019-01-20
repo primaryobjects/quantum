@@ -3,7 +3,7 @@ Quantum Computing Tutorial
 
 A set of simple programs for learning how to program a quantum computer.
 
-Read the tutorial [An Introduction to Quantum Computing](http://www.primaryobjects.com/2019/01/07/an-introduction-to-quantum-computing/)
+Read the tutorial [An Introduction to Quantum Computing](http://www.primaryobjects.com/2019/01/07/an-introduction-to-quantum-computing).
 
 ## What is it?
 
