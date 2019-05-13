@@ -3,6 +3,8 @@ Quantum Computing Tutorial
 
 A set of simple programs for learning how to program a quantum computer.
 
+Read the tutorial [An Introduction to Quantum Computing](http://www.primaryobjects.com/2019/01/07/an-introduction-to-quantum-computing).
+
 ## What is it?
 
 Quantum computing is a technology based upon quantum physics and its inherent properties of superposition and entanglement. It brings a new paradigm to programming, where algorithms can be created that can process exponentially more data than classical computers that rely on transistor-based technology.
