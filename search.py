@@ -22,6 +22,8 @@ import ast
 from configparser import RawConfigParser
 
 type = 'sim' # Run program on the simulator or real quantum machine.
+shots = 1024 # Number of measurements (shots) per program execution.
+trials = 10 # Number of trials to run the experiment in performing Grover's search on a secret key.
 
 def run(program, type, shots = 1):
   if type == 'real':
@@ -61,7 +63,18 @@ def run(program, type, shots = 1):
 
 run.isInit = False
 
-def oracle(program, password):
+def generatePassword():
+  # Choose a random code for the oracle function.
+  password = np.random.randint(2, size=4)
+
+  # Convert the password array into an array of strings.
+  passwordStrArr = np.char.mod('%d', password)
+  # Convert the array of strings into a single string for display.
+  passwordStr = ''.join(passwordStrArr)
+
+  return password, passwordStr;
+
+def oracle(program, qr, password):
   # Find all bits with a value of 0.
   indices = np.where(password == 0)[0]
 
@@ -72,83 +85,84 @@ def oracle(program, password):
     # Invert the qubit.
     program.x(qr[index])
 
-# Choose a random code for the oracle function.
-password = np.random.randint(2, size=4)
+def search(password):
+  # Grover's search algorithm on a 4-bit secret key.
+  # Create 2 qubits for the input array.
+  qr = QuantumRegister(4)
+  # Create 2 registers for the output.
+  cr = ClassicalRegister(4)
+  program = QuantumCircuit(qr, cr)
 
-# Convert the password array into an array of strings.
-passwordStrArr = np.char.mod('%d', password)
-# Convert the array of strings into a single string for display.
-passwordStr = ''.join(passwordStrArr)
-# Display the password.
-print("The oracle password is " + passwordStr + ".")
+  # Place the qubits into superposition to represent all possible values.
+  program.h(qr)
 
-# Create 2 qubits for the input array.
-qr = QuantumRegister(4)
-# Create 2 registers for the output.
-cr = ClassicalRegister(4)
-program = QuantumCircuit(qr, cr)
+  # Run oracle on key. Invert the 0-value bits.
+  oracle(program, qr, password)
 
-# Place the qubits into superposition to represent all possible values.
-program.h(qr)
+  # Apply Grover's algorithm with a triple controlled Pauli Z-gate (cccZ).
+  program.cu1(np.pi / 4, qr[0], qr[3])
+  program.cx(qr[0], qr[1])
+  program.cu1(-np.pi / 4, qr[1], qr[3])
+  program.cx(qr[0], qr[1])
+  program.cu1(np.pi/4, qr[1], qr[3])
+  program.cx(qr[1], qr[2])
+  program.cu1(-np.pi/4, qr[2], qr[3])
+  program.cx(qr[0], qr[2])
+  program.cu1(np.pi/4, qr[2], qr[3])
+  program.cx(qr[1], qr[2])
+  program.cu1(-np.pi/4, qr[2], qr[3])
+  program.cx(qr[0], qr[2])
+  program.cu1(np.pi/4, qr[2], qr[3])
 
-# Run oracle on key. Invert the 0-value bits.
-oracle(program, password)
+  # Reverse the inversions by the oracle.
+  oracle(program, qr, password)
 
-# Apply Grover's algorithm with a triple controlled Pauli Z-gate (cccZ).
-program.cu1(np.pi / 4, qr[0], qr[3])
-program.cx(qr[0], qr[1])
-program.cu1(-np.pi / 4, qr[1], qr[3])
-program.cx(qr[0], qr[1])
-program.cu1(np.pi/4, qr[1], qr[3])
-program.cx(qr[1], qr[2])
-program.cu1(-np.pi/4, qr[2], qr[3])
-program.cx(qr[0], qr[2])
-program.cu1(np.pi/4, qr[2], qr[3])
-program.cx(qr[1], qr[2])
-program.cu1(-np.pi/4, qr[2], qr[3])
-program.cx(qr[0], qr[2])
-program.cu1(np.pi/4, qr[2], qr[3])
+  # Amplification.
+  program.h(qr)
+  program.x(qr)
 
-# Reverse the inversions by the oracle.
-oracle(program, password)
+  # Apply Grover's algorithm with a triple controlled Pauli Z-gate (cccZ).
+  program.cu1(np.pi/4, qr[0], qr[3])
+  program.cx(qr[0], qr[1])
+  program.cu1(-np.pi/4, qr[1], qr[3])
+  program.cx(qr[0], qr[1])
+  program.cu1(np.pi/4, qr[1], qr[3])
+  program.cx(qr[1], qr[2])
+  program.cu1(-np.pi/4, qr[2], qr[3])
+  program.cx(qr[0], qr[2])
+  program.cu1(np.pi/4, qr[2], qr[3])
+  program.cx(qr[1], qr[2])
+  program.cu1(-np.pi/4, qr[2], qr[3])
+  program.cx(qr[0], qr[2])
+  program.cu1(np.pi/4, qr[2], qr[3])
 
-# Amplification.
-program.h(qr)
-program.x(qr)
+  # Reverse the amplification.
+  program.x(qr)
+  program.h(qr)
 
-# Apply Grover's algorithm with a triple controlled Pauli Z-gate (cccZ).
-program.cu1(np.pi/4, qr[0], qr[3])
-program.cx(qr[0], qr[1])
-program.cu1(-np.pi/4, qr[1], qr[3])
-program.cx(qr[0], qr[1])
-program.cu1(np.pi/4, qr[1], qr[3])
-program.cx(qr[1], qr[2])
-program.cu1(-np.pi/4, qr[2], qr[3])
-program.cx(qr[0], qr[2])
-program.cu1(np.pi/4, qr[2], qr[3])
-program.cx(qr[1], qr[2])
-program.cu1(-np.pi/4, qr[2], qr[3])
-program.cx(qr[0], qr[2])
-program.cu1(np.pi/4, qr[2], qr[3])
+  # Measure the result.
+  program.barrier(qr)
+  program.measure(qr, cr)
 
-# Reverse the amplification.
-program.x(qr)
-program.h(qr)
+  return run(program, type, shots)
 
-# Measure the result.
-program.barrier(qr)
-program.measure(qr, cr)
+for i in range(trials):
+  # Generate a random password consisting of 4 bits.
+  password, passwordStr = generatePassword()
 
-computerResult = []
-count = 0
+  # Display the password.
+  print("The oracle password is " + passwordStr + ".")
 
-while computerResult != passwordStr:
-  # Obtain a measurement and check if it matches the password (without error).
-  results = run(program, type, 1024)
-  print(results)
-  computerResult = max(results.items(), key=operator.itemgetter(1))[0]
-  print("The quantum computer guesses ")
-  print(computerResult)
-  count = count + 1
+  # Ask the quantum computer to guess the password.
+  computerResult = []
+  count = 0
+  while computerResult != passwordStr:
+    # Obtain a measurement and check if it matches the password (without error).
+    results = search(password)
+    print(results)
+    computerResult = max(results.items(), key=operator.itemgetter(1))[0]
+    print("The quantum computer guesses ")
+    print(computerResult)
+    count = count + 1
 
-print("Solved " + passwordStr + " in " + str(count) + " measurements.")
+  print("Solved " + passwordStr + " in " + str(count) + " measurements.")
