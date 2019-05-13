@@ -17,17 +17,25 @@ from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit
 from qiskit import IBMQ
 import numpy as np
 import operator
+import time
+import ast
 from configparser import RawConfigParser
 
 type = 'sim' # Run program on the simulator or real quantum machine.
 
-def run(program, type, shots = 100):
+def run(program, type, shots = 1):
   if type == 'real':
     if not run.isInit:
         # Setup the API key for the real quantum computer.
         parser = RawConfigParser()
         parser.read('config.ini')
-        IBMQ.enable_account(parser.get('IBM', 'key'))
+
+        # Read configuration values.
+        proxies = ast.literal_eval(parser.get('IBM', 'proxies')) if parser.has_option('IBM', 'proxies') else None
+        verify = (True if parser.get('IBM', 'verify') == 'True' else False) if parser.has_option('IBM', 'verify') else True
+        token = parser.get('IBM', 'key')
+
+        IBMQ.enable_account(token = token, proxies = proxies, verify = verify)
         run.isInit = True
 
     # Set the backend server.
@@ -35,13 +43,21 @@ def run(program, type, shots = 100):
 
     # Execute the program on the quantum machine.
     print("Running on", backend.name())
+    start = time.time()
     job = qiskit.execute(program, backend)
-    return job.result().get_counts()
+    result = job.result().get_counts()
+    stop = time.time()
+    print("Request completed in " + str(round((stop - start) / 60, 2)) + "m " + str(round((stop - start) % 60, 2)) + "s")
+    return result
   else:
     # Execute the program in the simulator.
     print("Running on the simulator.")
+    start = time.time()
     job = qiskit.execute(program, qiskit.Aer.get_backend('qasm_simulator'), shots=shots)
-    return job.result().get_counts()
+    result = job.result().get_counts()
+    stop = time.time()
+    print("Request completed in " + str(round((stop - start) / 60, 2)) + "m " + str(round((stop - start) % 60, 2)) + "s")
+    return result
 
 run.isInit = False
 
@@ -123,4 +139,16 @@ program.h(qr)
 program.barrier(qr)
 program.measure(qr, cr)
 
-print(run(program, type))
+computerResult = []
+count = 0
+
+while computerResult != passwordStr:
+  # Obtain a measurement and check if it matches the password (without error).
+  results = run(program, type, 1024)
+  print(results)
+  computerResult = max(results.items(), key=operator.itemgetter(1))[0]
+  print("The quantum computer guesses ")
+  print(computerResult)
+  count = count + 1
+
+print("Solved " + passwordStr + " in " + str(count) + " measurements.")
