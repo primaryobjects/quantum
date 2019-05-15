@@ -19,6 +19,7 @@ import numpy as np
 import operator
 import time
 import ast
+import sys
 from configparser import RawConfigParser
 
 type = 'sim' # Run program on the simulator or real quantum machine.
@@ -152,6 +153,7 @@ for i in range(trials):
 
   # Display the password.
   print("The oracle password is " + passwordStr + ".")
+  sys.stdout.flush()
 
   # Ask the quantum computer to guess the password.
   computerResult = []
@@ -164,5 +166,6 @@ for i in range(trials):
     print("The quantum computer guesses ")
     print(computerResult)
     count = count + 1
+    sys.stdout.flush()
 
   print("Solved " + passwordStr + " in " + str(count) + " measurements.")
