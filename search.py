@@ -45,8 +45,7 @@ def run(program, type, shots = 1):
         run.isInit = True
 
     # Set the backend server.
-    provider = IBMQ.get_provider()
-    backend = provider.get_backend('ibmq_qasm_simulator') #qiskit.providers.ibmq.least_busy(qiskit.IBMQ.backends(simulator=False))
+    backend = qiskit.providers.ibmq.least_busy(qiskit.IBMQ.backends(simulator=False))
 
     # Execute the program on the quantum machine.
     print("Running on", backend.name())
