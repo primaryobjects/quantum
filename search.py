@@ -11,6 +11,9 @@
 # Reference: http://kth.diva-portal.org/smash/get/diva2:1214481/FULLTEXT01.pdf
 # Appendix A.2
 #
+# export PYTHONWARNINGS="ignore:Unverified HTTPS request"
+# python3 search.py
+#
 
 import qiskit
 from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit
@@ -42,7 +45,8 @@ def run(program, type, shots = 1):
         run.isInit = True
 
     # Set the backend server.
-    backend = qiskit.providers.ibmq.least_busy(qiskit.IBMQ.backends(simulator=False))
+    provider = IBMQ.get_provider()
+    backend = provider.get_backend('ibmq_qasm_simulator') #qiskit.providers.ibmq.least_busy(qiskit.IBMQ.backends(simulator=False))
 
     # Execute the program on the quantum machine.
     print("Running on", backend.name())
